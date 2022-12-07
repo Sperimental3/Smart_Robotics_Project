@@ -26,17 +26,18 @@ class Simulation:
 
         Gin = Shape("Gin")
         Vermut = Shape("Vermut")
+        Lemon = Shape("Lemon")
+        Campari = Shape("Campari")
         # TODO other ingredients...
 
         self.ingredients = {"gin": [7, 9, 11, Gin],
-                            "vermut": [8, 12, 13, Vermut]
+                            "vermut": [8, 12, 13, Vermut],
+                            "lemon": [14, 15, 16, Lemon],
+                            "campari": [17, 18, 19, Campari]
                             }
         self.cup = Shape('Cup')
 
-        self.waypoints = [Dummy(f"waypoint{i}") for i in range(14)]
-
-        for i in range(20):
-            self.sim.step()
+        self.waypoints = [Dummy(f"waypoint{i}") for i in range(22)]
 
     # TODO, to write labels on cylinders or on the table?
     # probably doing this with textures or colors

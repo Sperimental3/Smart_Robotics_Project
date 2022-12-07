@@ -1,5 +1,3 @@
-import time
-
 import numpy as np
 import math
 from time import sleep
@@ -17,19 +15,39 @@ class Baxter:
         self.baxter_gripper_left = BaxterGripper(0)
         self.baxter_gripper_right = BaxterGripper(1)
 
-        self.baxter_left.set_joint_target_positions([0.12206578254699707, -0.43517088890075684, -0.16766047477722168,
-                                                     2.0112273693084717, 0.8295693397521973, -1.4581592082977295,
-                                                     0.10328960418701172])
-        # TODO
         """
-        self.rest = {
-                'position': self.arm.get_tip().get_position(),
-                'quaternion': self.arm.get_tip().get_quaternion()
-                }
+        print(self.baxter_gripper_right.get_joint_target_positions(),
+              self.baxter_gripper_right.get_joint_positions())
+        
+        print(self.baxter_left.get_joint_target_positions(), self.baxter_left.get_joint_positions())
         """
-    def move(self, location, ignore_collision=False):
+
+        self.rest_left = [0.12206578254699707, -0.43517088890075684, -0.16766047477722168,
+                          2.0112273693084717, 0.8295693397521973, -1.4581592082977295,
+                          0.10328960418701172]
+        # self.rest_gripper_left = [0.05730545520782471, 0.05783754587173462]
+
+        self.rest_right = [-0.40036916732788086, -0.2947428226470947, 0.5197999477386475,
+                           2.0722572803497314, -0.9089522361755371, -1.249591588973999,
+                           -0.4194943904876709]
+        """
+        self.baxter_left.set_joint_target_positions(self.rest_left)
+        # self.baxter_gripper_left.set_joint_positions(self.rest_gripper_left)
+        # self.baxter_right.set_joint_target_positions(self.rest_right)
+        for i in range(30):
+            self.sim.sim.step()
+        """
+        # print(self.baxter_gripper_left.get_joint_target_positions(), self.baxter_gripper_left.get_joint_positions())
+
+        """
+        [-0.04156851768493652, -0.3941941261291504, 0.2625739574432373, 
+        2.157317638397217, -0.697993278503418, -1.5482113361358643, 
+        -0.3003427982330322]
+        """
+
+    def move(self, location, ignore_collision=False, left=True):
         try:
-            if location.get_position()[1] < 0:
+            if not left:
                 path = self.baxter_right.get_path(position=location.get_position(), quaternion=location.get_quaternion(), max_configs=10, ignore_collisions=ignore_collision)
             else:
                 path = self.baxter_left.get_path(position=location.get_position(), quaternion=location.get_quaternion(), max_configs=10, ignore_collisions=ignore_collision)
@@ -41,7 +59,7 @@ class Baxter:
             path.clear_visualization()
             return True
         except Exception:
-            print(f'Could not find a path using get_path(), solving iteratively trough jacobian ik...')
+            print(f"Could not find a path using get_path(), solving iteratively trough jacobian ik...")
 
         if location.get_position()[1] < 0:
             pos = self.baxter_right.get_tip().get_position()
@@ -73,21 +91,45 @@ class Baxter:
             self.sim.sim.step()
         return True
 
-    def reset_pos(self):
-        self.baxter_left.set_joint_target_positions([0.12206578254699707, -0.43517088890075684, -0.16766047477722168,
-                                                     2.0112273693084717, 0.8295693397521973, -1.4581592082977295,
-                                                     0.10328960418701172])
-        self.sim.sim.step()
+    def reset_pos(self, left):
+        if left:
+            """
+            self.baxter_left.set_joint_positions([0, 0, 0, 0, 0, 0, 0], disable_dynamics=True)
+            self.baxter_gripper_left.set_joint_positions([0.05999999865889549, 0.05999999865889549], disable_dynamics=True)
+            for i in range(30):
+                self.sim.sim.step()
+            """
+            """
+            print(self.baxter_gripper_left.get_joint_target_positions(),
+                  self.baxter_gripper_left.get_joint_positions())
+            print(self.baxter_left.get_joint_target_positions(), self.baxter_left.get_joint_positions())
+            """
+
+            self.baxter_left.set_joint_target_positions(self.rest_left)
+            # self.baxter_gripper_left.set_joint_positions(self.rest_gripper_left)
+            for i in range(30):
+                self.sim.sim.step()
+
+            """
+            print(self.baxter_gripper_left.get_joint_target_positions(),
+                  self.baxter_gripper_left.get_joint_positions())
+            print(self.baxter_left.get_joint_target_positions(), self.baxter_left.get_joint_positions())
+            """
+        else:
+            self.baxter_right.set_joint_target_positions(self.rest_right)
+            for i in range(30):
+                self.sim.sim.step()
 
     def grasp(self, obj):
         if obj.get_position()[1] < 0:
+            self.baxter_gripper_right.grasp(obj)
             while not self.baxter_gripper_right.actuate(0.0, 0.4):
                 self.sim.sim.step()
-            self.baxter_gripper_right.grasp(obj)
         else:
+            self.baxter_gripper_left.grasp(obj)
             while not self.baxter_gripper_left.actuate(0.0, 0.4):
                 self.sim.sim.step()
-            self.baxter_gripper_left.grasp(obj)
+
         return True
 
     def release(self, obj):
@@ -102,27 +144,26 @@ class Baxter:
 
     def pour(self, left):
         if left:
-            joints = self.baxter_left.get_joint_target_positions()
+            joints = self.baxter_left.get_joint_positions()
             joints[6] = joints[6] - math.pi
 
             self.baxter_left.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
-            sleep(1.5)
+            sleep(1)
 
             joints[6] = joints[6] + math.pi
             self.baxter_left.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
-
         else:
-            joints = self.baxter_right.get_joint_target_positions()
+            joints = self.baxter_right.get_joint_positions()
             joints[6] = joints[6] - math.pi
 
             self.baxter_right.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
-            sleep(1.5)
+            sleep(1)
 
             joints[6] = joints[6] + math.pi
             self.baxter_right.set_joint_target_positions(joints)
@@ -140,32 +181,41 @@ class Baxter:
             left = True
         else:
             left = False
-        # self.move(self.sim.waypoints[10])
+        # self.move(self.sim.waypoints[10], left=left)
+        # self.move(self.sim.waypoints[21], left=left)
 
         # print(self.baxter_left.get_joint_positions())
-        print(self.baxter_right.get_joint_positions())
+        # print(self.baxter_right.get_joint_positions())
+        if not left:
+            self.baxter_right.set_joint_target_positions(self.rest_right)
+            for i in range(30):
+                self.sim.sim.step()
+            while not self.baxter_gripper_right.actuate(1.0, 0.4):
+                self.sim.sim.step()
+        else:
+            self.baxter_left.set_joint_target_positions(self.rest_left)
+            for i in range(30):
+                self.sim.sim.step()
 
-        self.move(self.sim.waypoints[ingr[0]])
-        self.move(self.sim.waypoints[ingr[1]], ignore_collision=True)
+        self.move(self.sim.waypoints[ingr[0]], left=left)
+        self.move(self.sim.waypoints[ingr[1]], ignore_collision=True, left=left)
 
         self.grasp(ingr[3])
 
         # print("Grasping done!")
 
-        self.move(self.sim.waypoints[ingr[2]], ignore_collision=True)
+        self.move(self.sim.waypoints[ingr[2]], ignore_collision=True, left=left)
         if left:
-            self.move(self.sim.waypoints[2])
+            self.move(self.sim.waypoints[2], left=left)
         else:
-            pass    # TODO
+            self.move(self.sim.waypoints[20], left=left)
 
-        # TODO
         self.pour(left)
 
-        self.move(self.sim.waypoints[ingr[2]])
-        # self.move(self.sim.waypoints[ingr[0]])
-        self.move(self.sim.waypoints[ingr[1]], ignore_collision=True)
+        self.move(self.sim.waypoints[ingr[2]], left=left)
+        self.move(self.sim.waypoints[ingr[1]], ignore_collision=True, left=left)
 
         self.release(ingr[3])
+        self.move(self.sim.waypoints[ingr[0]], left=left)
 
-        # TODO
-        self.reset_pos()
+        self.reset_pos(left)

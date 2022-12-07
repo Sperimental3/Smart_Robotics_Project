@@ -27,7 +27,12 @@ random.seed(SEED)
 sim = Simulation()
 # sim.start()
 
+# print(sim.waypoints[20].get_quaternion(), sim.waypoints[2].get_quaternion(), sim.waypoints[20])
 sim.Baxter.pick_and_pour("gin")
+sim.Baxter.pick_and_pour("vermut")
+
+sim.Baxter.pick_and_pour("lemon")
+sim.Baxter.pick_and_pour("campari")
 
 sim.stop()
 
