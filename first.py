@@ -1,9 +1,6 @@
 """
-A baxter picks up a cup with its left arm and then passes it to its right arm.
-This script contains examples of:
-    - Path planning (linear and non-linear).
-    - Using multiple arms.
-    - Using a gripper.
+A script used a lot in the beginning of the project to test out the movements of Baxter in different situation.
+Specifically to test the working of the pick_and_pour operation.
 """
 
 from os.path import dirname, join, abspath
@@ -28,14 +25,18 @@ sim = Simulation()
 # sim.start()
 
 # print(sim.waypoints[20].get_quaternion(), sim.waypoints[2].get_quaternion(), sim.waypoints[20])
-sim.Baxter.pick_and_pour("gin")
-sim.Baxter.pick_and_pour("vermut")
+# sim.Baxter.pick_and_pour("gin")
+# sim.Baxter.pick_and_pour("vermut")
 
 sim.Baxter.pick_and_pour("lemon")
 sim.Baxter.pick_and_pour("campari")
 
-sim.stop()
+sim.Baxter.pick_and_pour("vermut")
+sim.Baxter.pick_and_pour("gin")
 
+sim.Baxter.pick_and_pour("vermut")
+
+sim.stop()
 
 """
 This procedure is related to the default behaviour of Baxter

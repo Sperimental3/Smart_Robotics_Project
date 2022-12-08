@@ -7,7 +7,7 @@ from pyrep.robots.end_effectors.baxter_gripper import BaxterGripper
 
 class Baxter:
     def __init__(self, sim):
-        # TODO
+
         self.sim = sim
 
         self.baxter_left = BaxterLeft()
@@ -30,6 +30,9 @@ class Baxter:
         self.rest_right = [-0.40036916732788086, -0.2947428226470947, 0.5197999477386475,
                            2.0722572803497314, -0.9089522361755371, -1.249591588973999,
                            -0.4194943904876709]
+        # In the constructor method I've decided to not initialize the position, and to let the pick_and_pour and
+        # reset_pos method takes care of that, this to try to avoid at maximum possible interferences between arms
+
         """
         self.baxter_left.set_joint_target_positions(self.rest_left)
         # self.baxter_gripper_left.set_joint_positions(self.rest_gripper_left)
@@ -39,12 +42,6 @@ class Baxter:
         """
         # print(self.baxter_gripper_left.get_joint_target_positions(), self.baxter_gripper_left.get_joint_positions())
 
-        """
-        [-0.04156851768493652, -0.3941941261291504, 0.2625739574432373, 
-        2.157317638397217, -0.697993278503418, -1.5482113361358643, 
-        -0.3003427982330322]
-        """
-
     def move(self, location, ignore_collision=False, left=True):
         try:
             if not left:
@@ -52,14 +49,21 @@ class Baxter:
             else:
                 path = self.baxter_left.get_path(position=location.get_position(), quaternion=location.get_quaternion(), max_configs=10, ignore_collisions=ignore_collision)
             done = False
+
             path.visualize()
+
             while not done:
                 done = path.step()
                 self.sim.sim.step()
+
             path.clear_visualization()
+
             return True
         except Exception:
             print(f"Could not find a path using get_path(), solving iteratively trough jacobian ik...")
+
+        # seeing all my tests the code below should never happen, also because is much slower than get_path,
+        # due to the recursion
 
         if location.get_position()[1] < 0:
             pos = self.baxter_right.get_tip().get_position()
@@ -70,21 +74,20 @@ class Baxter:
             quat = self.baxter_left.get_tip().get_quaternion()
             arm = self.baxter_left
 
-        STEPS = 50
         orientation = np.array(location.get_quaternion())
         location = np.array(location.get_position())
 
         pos = np.array(pos)
         quat = np.array(quat)
 
-        for i in range(STEPS):
-            delta_pos = pos + i*(location - pos)/STEPS
-            delta_quat = quat + i*(orientation - quat)/STEPS
+        for i in range(50):
+            delta_pos = pos + i*(location - pos)/50
+            delta_quat = quat + i*(orientation - quat)/50
 
             try:
                 ik = arm.solve_ik_via_jacobian(delta_pos, quaternion=delta_quat)
             except Exception:
-                print(f'Could not get to {location}, stopped at {delta_pos}...')
+                print(f"Could not get to {location}, stopped at {delta_pos}...")
                 ik = arm.solve_ik_via_sampling(position=delta_pos, quaternion=delta_quat, max_configs=10)
 
             arm.set_joint_target_positions(ik)
@@ -121,6 +124,8 @@ class Baxter:
                 self.sim.sim.step()
 
     def grasp(self, obj):
+        # Here it is absolutely crucial to put the grasp method before the actuation,
+        # at the contrary on what the PyRep reference says
         if obj.get_position()[1] < 0:
             self.baxter_gripper_right.grasp(obj)
             while not self.baxter_gripper_right.actuate(0.0, 0.4):
@@ -142,7 +147,11 @@ class Baxter:
             while not self.baxter_gripper_left.actuate(1.0, 0.4):
                 self.sim.sim.step()
 
+        return True
+
     def pour(self, left):
+        # This method wants to simply rotate the end effector of pi angle,
+        # with some limitations due to the joints position
         if left:
             joints = self.baxter_left.get_joint_positions()
             joints[6] = joints[6] - math.pi
@@ -150,7 +159,8 @@ class Baxter:
             self.baxter_left.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
-            sleep(1)
+
+            sleep(1)    # To simulate the liquid pouring
 
             joints[6] = joints[6] + math.pi
             self.baxter_left.set_joint_target_positions(joints)
@@ -158,14 +168,15 @@ class Baxter:
                 self.sim.sim.step()
         else:
             joints = self.baxter_right.get_joint_positions()
-            joints[6] = joints[6] - math.pi
+            joints[6] = joints[6] + math.pi
 
             self.baxter_right.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
+
             sleep(1)
 
-            joints[6] = joints[6] + math.pi
+            joints[6] = joints[6] - math.pi
             self.baxter_right.set_joint_target_positions(joints)
             for i in range(30):
                 self.sim.sim.step()
