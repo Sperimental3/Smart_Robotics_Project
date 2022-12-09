@@ -19,7 +19,7 @@ class Simulation:
     def __init__(self):
         self.sim = PyRep()
         self.sim.launch(SCENE_FILE)
-        self.sim.start()
+        # self.sim.start()
 
         Gin = Shape("Gin")
         Vermut = Shape("Vermut")
@@ -38,6 +38,7 @@ class Simulation:
 
         self.Baxter = Baxter(self)
 
+        """
         self.default_baxter_left_conf = self.Baxter.baxter_left.get_configuration_tree()
         self.default_baxter_right_conf = self.Baxter.baxter_right.get_configuration_tree()
 
@@ -50,20 +51,15 @@ class Simulation:
         self.default_Campari_conf = Campari.get_configuration_tree()
 
         self.default_cup_conf = self.cup.get_configuration_tree()
+        """
 
-    # TODO, to write labels on cylinders or on the table?
-    # probably doing this with textures or colors
+    # TODO, to write labels on cylinders or on the table? probably doing this with textures or colors
 
-    """
     def start(self):
         self.sim.start()
-        self.sim.step()
+        # self.sim.step()
 
-        # just for initialization calm I suppose
-        for i in range(10):
-            self.sim.step()
     """
-
     def restore(self):
         self.sim.set_configuration_tree(self.default_baxter_left_conf)
         self.sim.set_configuration_tree(self.default_baxter_right_conf)
@@ -76,7 +72,10 @@ class Simulation:
         self.sim.set_configuration_tree(self.default_Campari_conf)
 
         self.sim.set_configuration_tree(self.default_cup_conf)
+    """
 
     def stop(self):
         self.sim.stop()
+
+    def shutdown(self):
         self.sim.shutdown()
