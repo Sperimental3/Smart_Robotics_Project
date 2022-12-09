@@ -13,22 +13,31 @@ import numpy as np
 import torch
 import random
 from Simulation import Simulation
+from understanding import Understander
 
 SEED = 3334
 
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 random.seed(SEED)
+"""
+Brain = Understander()
 
+prova = input("Give me an english request for a cocktail order/s to feed to the understander: ")
+
+print(Brain.understand(prova))
+"""
+"""
+"""
 # Let's do some tests
 sim = Simulation()
 # sim.start()
-
+"""
 # print(sim.waypoints[20].get_quaternion(), sim.waypoints[2].get_quaternion(), sim.waypoints[20])
-# sim.Baxter.pick_and_pour("gin")
-# sim.Baxter.pick_and_pour("vermut")
+#sim.Baxter.pick_and_pour("gin")
+#sim.Baxter.pick_and_pour("vermut")
 
-sim.Baxter.pick_and_pour("lemon")
+#sim.Baxter.pick_and_pour("lemon")
 sim.Baxter.pick_and_pour("campari")
 
 sim.Baxter.pick_and_pour("vermut")
@@ -37,7 +46,7 @@ sim.Baxter.pick_and_pour("gin")
 sim.Baxter.pick_and_pour("vermut")
 
 sim.stop()
-
+"""
 """
 This procedure is related to the default behaviour of Baxter
 
