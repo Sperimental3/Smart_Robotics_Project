@@ -31,12 +31,12 @@ sim.Baxter.pick_and_pour("vermut")
 sim.Baxter.pick_and_pour("lemon")
 sim.Baxter.pick_and_pour("campari")
 
-#sim.Baxter.pick_and_pour("vermut")
-#sim.Baxter.pick_and_pour("gin")
+# sim.Baxter.pick_and_pour("vermut")
+# sim.Baxter.pick_and_pour("gin")
 
-#sim.Baxter.pick_and_pour("vermut")
+# sim.Baxter.pick_and_pour("vermut")
 sim.stop()
-#sim.restore()
+# sim.restore()
 sim.start()
 
 sim.Baxter.pick_and_pour("gin")
@@ -47,6 +47,7 @@ sim.Baxter.pick_and_pour("campari")
 
 sim.stop()
 sim.shutdown()
+
 """
 This procedure is related to the default behaviour of Baxter
 

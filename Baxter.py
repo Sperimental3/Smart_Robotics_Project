@@ -230,3 +230,5 @@ class Baxter:
         self.move(self.sim.waypoints[ingr[0]], left=left)
 
         self.reset_pos(left)
+
+    # TODO: action "serve" for picking and giving the cup to an invisible customer
