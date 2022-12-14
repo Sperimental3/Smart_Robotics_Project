@@ -51,7 +51,7 @@ class Understander:
             presence_penalty=0
         )
 
-        print(response)
+        # print(response)
         not_clean_orders = response["choices"][0]["text"].split('[')
 
         orders = []

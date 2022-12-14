@@ -3,17 +3,13 @@ A script used a lot in the beginning of the project to test out the movements of
 Specifically to test the working of the pick_and_pour operation.
 """
 
-from os.path import dirname, join, abspath
-from pyrep import PyRep
-from pyrep.robots.arms.baxter import BaxterLeft, BaxterRight
-from pyrep.robots.end_effectors.baxter_gripper import BaxterGripper
-from pyrep.objects.dummy import Dummy
-from pyrep.objects.shape import Shape
 import numpy as np
 import torch
 import random
 from Simulation import Simulation
 from understanding import Understander
+from listening import Listener
+
 
 SEED = 3334
 
@@ -22,9 +18,13 @@ torch.manual_seed(SEED)
 random.seed(SEED)
 
 Brain = Understander()
+Ears = Listener()
 
 # prova = input("Give me an english request for a cocktail order/s to feed to the understander: ")
 # print(Brain.understand(prova))
+
+# phrase = Ears.listen()
+# print(phrase)
 
 sim = Simulation()
 
@@ -33,7 +33,11 @@ while True:
     if end == "q":
         break
 
-    phrase = input("Give me an english request for a cocktail order/s to feed to the understander: ")
+    mode = input("You want a textual mode? (Because of noise or other problems) (Yes/No)")
+    if mode == "Yes" or mode == "Y" or mode == "YES":
+        phrase = input("Give me an english request for a cocktail order/s to feed to the understander: ")
+    else:
+        phrase = Ears.listen()
 
     orders = Brain.understand(phrase)
 
@@ -49,4 +53,5 @@ while True:
         sim.stop()
 
 sim.shutdown()
+
 print("Bye!")
