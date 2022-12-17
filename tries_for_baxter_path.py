@@ -24,6 +24,9 @@ random.seed(SEED)
 sim = Simulation()
 sim.start()
 
+# print(sim.Baxter.baxter_left.get_joint_target_positions(), sim.Baxter.baxter_left.get_joint_positions())
+# print(sim.Baxter.baxter_right.get_joint_target_positions(), sim.Baxter.baxter_right.get_joint_positions())
+
 # print(sim.waypoints[20].get_quaternion(), sim.waypoints[2].get_quaternion(), sim.waypoints[20])
 sim.Baxter.pick_and_pour("gin")
 sim.Baxter.pick_and_pour("vermut")
@@ -35,6 +38,7 @@ sim.Baxter.pick_and_pour("campari")
 # sim.Baxter.pick_and_pour("gin")
 
 # sim.Baxter.pick_and_pour("vermut")
+
 sim.stop()
 # sim.restore()
 sim.start()

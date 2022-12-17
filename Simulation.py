@@ -13,6 +13,7 @@ from random import random
 
 
 SCENE_FILE = P.join(P.dirname(P.abspath(__file__)), "simulation.ttt")
+SCENE_FILE_DEBUG = "/home/sperimental3/Scrivania/simulation.ttt"
 
 
 class Simulation:
@@ -32,7 +33,7 @@ class Simulation:
                             "campari": [17, 18, 19, Campari]
                             }
 
-        self.cup = Shape('Cup')
+        self.cup = Shape("Cup")
 
         self.waypoints = [Dummy(f"waypoint{i}") for i in range(22)]
 

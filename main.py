@@ -46,9 +46,11 @@ while True:
 
         for ingredient in order:
             if ingredient == '?':
-                # TODO: an action that makes understand that baxter doesn't get it
+                sim.Baxter.dunno()
                 break
             sim.Baxter.pick_and_pour(ingredient)
+        #if '?' not in order:    # TODO serve or not
+            #sim.Baxter.serve()
 
         sim.stop()
 
