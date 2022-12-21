@@ -247,8 +247,11 @@ class Baxter:
         for i in range(100):
             self.sim.sim.step()
 
-        sleep(3)
+        sleep(1)
 
+    """
+    This action is purely aesthetical and risks to overload the simulation 
+    
     def serve(self):
         self.reset_pos(left=True)
 
@@ -258,52 +261,4 @@ class Baxter:
         self.grasp(self.sim.cup)
 
         self.move(self.sim.waypoints[2], ignore_collision=True)
-        """
-        print('Planning path for right arm to cup ...')
-        path = baxter_right.get_path(position=waypoints[3].get_position(),
-                                     quaternion=waypoints[3].get_quaternion())
-        print('Executing Plan ...')
-        done = False
-        while not done:
-            done = path.step()
-            pr.step()
-
-        print('Planning path closer to cup ...')
-        path = baxter_right.get_path(position=waypoints[4].get_position(),
-                                     quaternion=waypoints[4].get_quaternion())
-        print('Executing plan ...')
-        done = False
-        while not done:
-            done = path.step()
-            pr.step()
-
-        print('Closing right gripper ...')
-        while not baxter_gripper_right.actuate(0.0, 0.4):
-            pr.step()
-
-        print('Opening left gripper ...')
-        while not baxter_gripper_left.actuate(1.0, 0.4):
-            pr.step()
-
-        # Left gripper releases, right gripper grasps.
-        baxter_gripper_left.release()
-        baxter_gripper_right.grasp(cup)
-        pr.step()
-
-        print('Planning path for left arm to home position ...')
-        path_l = baxter_left.get_path(position=waypoints[5].get_position(),
-                                      quaternion=waypoints[5].get_quaternion())
-
-        print('Planning path for right arm to home position ...')
-        path_r = baxter_right.get_path(position=waypoints[6].get_position(),
-                                       quaternion=waypoints[6].get_quaternion())
-
-        print('Executing plan on both arms ...')
-        done_l = done_r = False
-        while not done_l or not done_r:
-            if not done_l:
-                done_l = path_l.step()
-            if not done_r:
-                done_r = path_r.step()
-            pr.step()
-        """
+    """

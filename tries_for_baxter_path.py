@@ -13,6 +13,7 @@ import numpy as np
 import torch
 import random
 from Simulation import Simulation
+# import cv2
 
 SEED = 3334
 
@@ -23,6 +24,15 @@ random.seed(SEED)
 # Let's do some tests
 sim = Simulation()
 sim.start()
+"""
+for i in range(10):
+    sim.sim.step()
+
+img = sim.camera.capture_rgb()*255
+img = np.flip(img, -1)
+cv2.imwrite("/home/sperimental3/Scrivania/empty.jpg", img)
+"""
+# sim.Baxter.serve()
 
 # print(sim.Baxter.baxter_left.get_joint_target_positions(), sim.Baxter.baxter_left.get_joint_positions())
 # print(sim.Baxter.baxter_right.get_joint_target_positions(), sim.Baxter.baxter_right.get_joint_positions())
@@ -38,7 +48,7 @@ sim.Baxter.pick_and_pour("campari")
 # sim.Baxter.pick_and_pour("gin")
 
 # sim.Baxter.pick_and_pour("vermut")
-
+"""
 sim.stop()
 # sim.restore()
 sim.start()
@@ -48,7 +58,7 @@ sim.Baxter.pick_and_pour("vermut")
 
 sim.Baxter.pick_and_pour("lemon")
 sim.Baxter.pick_and_pour("campari")
-
+"""
 sim.stop()
 sim.shutdown()
 

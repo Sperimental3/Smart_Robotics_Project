@@ -1,7 +1,7 @@
 import os.path as P
 import numpy as np
 import cv2 as cv
-import torch
+from random import random
 
 from pyrep import PyRep
 from pyrep.objects.shape import Shape
@@ -9,11 +9,10 @@ from pyrep.objects.dummy import Dummy
 
 from Baxter import Baxter
 
-from random import random
-
+# from pyrep.objects.vision_sensor import VisionSensor
 
 SCENE_FILE = P.join(P.dirname(P.abspath(__file__)), "simulation.ttt")
-SCENE_FILE_DEBUG = "/home/sperimental3/Scrivania/simulation.ttt"
+SCENE_FILE_DEBUG = "/home/sperimental3/Scrivania/simulation_debug.ttt"
 
 
 class Simulation:
@@ -21,6 +20,8 @@ class Simulation:
         self.sim = PyRep()
         self.sim.launch(SCENE_FILE)
         # self.sim.start()
+
+        # self.camera = VisionSensor("Camera")
 
         Gin = Shape("Gin")
         Vermut = Shape("Vermut")
@@ -53,8 +54,6 @@ class Simulation:
 
         self.default_cup_conf = self.cup.get_configuration_tree()
         """
-
-    # TODO, to write labels on cylinders or on the table? probably doing this with textures or colors
 
     def start(self):
         self.sim.start()
