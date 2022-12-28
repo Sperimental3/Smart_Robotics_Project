@@ -32,6 +32,12 @@ BASE_PROMPT = ("Baxter is a bartender robot that have to listen to orders of coc
                "Response: [?]\n\n"
                "Give me a Campari, then a white russian\n"
                "Response: [Campari] [?]\n\n"
+               "a lemon juice, please\n"
+               "Response: [Lemon]\n\n"
+               "I want a Martini with lemon juice\n"
+               "Response: [Gin, Vermut, Lemon]\n\n"
+               "Mix me lemon juice and vermut\n"
+               "Response: [Lemon, Vermut]\n\n"
                )
 
 
@@ -69,6 +75,8 @@ class Understander:
                        ingredient == "vermut" or ingredient == "lemon" or ingredient == "?"
                 order.append(ingredient)
 
-            orders.append(order)
+            sorted_order = [ingr for ingr in ["?", "gin", "vermut", "lemon", "campari"] if ingr in order]
+
+            orders.append(sorted_order)
 
         return orders

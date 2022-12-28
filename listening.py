@@ -1,3 +1,5 @@
+# TODO try to improve this part in general
+
 import speech_recognition as sr
 from ctypes import *
 from contextlib import contextmanager

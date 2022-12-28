@@ -1,6 +1,6 @@
 """
-A script used a lot in the beginning of the project to test out the movements of Baxter in different situation.
-Specifically to test the working of the pick_and_pour operation.
+The main script. Here there is the loop that involves each time an order
+and an execution from the simulation.
 """
 
 import numpy as np
@@ -34,8 +34,8 @@ while True:
         break
 
     mode = input("You want a textual mode? (Because of noise or other problems) (Yes/No)")
-    if mode == "Yes" or mode == "Y" or mode == "YES":
-        phrase = input("Give me an english request for a cocktail order/s to feed to the understander: ")
+    if mode == "Yes" or mode == "Y" or mode == "YES" or mode == "yes" or mode == "y":
+        phrase = input("Give me an english request for a cocktail order/s to feed to the understander:\n")
     else:
         phrase = Ears.listen()
 
