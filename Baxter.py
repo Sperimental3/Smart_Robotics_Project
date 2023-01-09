@@ -55,13 +55,13 @@ class Baxter:
                 path = self.baxter_left.get_path(position=location.get_position(), quaternion=location.get_quaternion(), max_configs=10, ignore_collisions=ignore_collision)
             done = False
 
-            path.visualize()
+            # path.visualize()
 
             while not done:
                 done = path.step()
                 self.sim.sim.step()
 
-            path.clear_visualization()
+            # path.clear_visualization()
 
             return True
         except Exception:

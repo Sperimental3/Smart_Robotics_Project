@@ -38,6 +38,10 @@ while True:
         phrase = input("Give me an english request for a cocktail order/s to feed to the understander:\n")
     else:
         phrase = Ears.listen()
+        if len(phrase) < 5:
+            print("Some error in the listening occurs. Try again or switch to textual mode...\n")
+            continue
+        print(phrase)
 
     orders = Brain.understand(phrase)
 

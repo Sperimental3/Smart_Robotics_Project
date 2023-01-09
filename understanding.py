@@ -6,7 +6,8 @@ BASE_PROMPT = ("Baxter is a bartender robot that have to listen to orders of coc
                "and it must return the ingredients. The orders can be of complex cocktails following a given recipe, "
                "or they can be of separate single ingredients. It is also possible for Baxter to receive a sequence of "
                "orders. If the order is not on the recipes list or it is not one of the four basic ingredients "
-               "(Gin, Vermut, Campari, Lemon), Baxter will return \"[?]\"\n\n"
+               "(Gin, Vermut, Campari, Lemon), Baxter will return \"[?]\". It is also possible to ask Baxter to give "
+               "again an order already given, for example the last one or the one before the last one.\n\n"
                "Recipes:\n"
                "Martini: Gin, Vermut\n"
                "Gin lemon: Gin, Lemon\n"
@@ -38,6 +39,10 @@ BASE_PROMPT = ("Baxter is a bartender robot that have to listen to orders of coc
                "Response: [Gin, Vermut, Lemon]\n\n"
                "Mix me lemon juice and vermut\n"
                "Response: [Lemon, Vermut]\n\n"
+               "the same\n"
+               "Response: [Lemon, Vermut]\n\n"
+               "Give me three lemon juice\n"
+               "Response: [Lemon] [Lemon] [Lemon]\n\n"
                )
 
 
@@ -51,7 +56,7 @@ class Understander:
             model="text-davinci-003",
             prompt=request,
             temperature=0.0,
-            max_tokens=400,
+            max_tokens=600,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0
@@ -78,5 +83,16 @@ class Understander:
             sorted_order = [ingr for ingr in ["?", "gin", "vermut", "lemon", "campari"] if ingr in order]
 
             orders.append(sorted_order)
+
+        # Expansion to give Baxter a memory
+        response_string = ""
+
+        for order in orders:
+            order_string = "[" + " ".join(ingr_string for ingr_string in order) + "]"
+            response_string += " " + order_string
+
+        self.prompt = self.prompt + phrase + "\nResponse:" + response_string + "\n\n"
+
+        # print(response_string)
 
         return orders

@@ -47,27 +47,29 @@ class Listener:
 
         phrase_list = recognizer.recognize_google(audio, show_all=True)
 
+        # print(phrase_list)
+
         # Here a brief way to rank the possible phrases listened by the recognizer,
         # trying to rank first the one with more words that are relevant to my task.
         chosen_phrase = ""
         max_points = 0
 
-        for phrase in phrase_list["alternative"]:
-            keywords = [word for word in phrase["transcript"].split() if word in ["gin", "vermut", "lemon", "campari", "Baxter", "Campari", "Negroni", "negroni", "martini", "Martini"]]
-            points = len(keywords)
-            if points > max_points:
-                max_points = points
-                chosen_phrase = phrase["transcript"]
+        if phrase_list:
+            for phrase in phrase_list["alternative"]:
+                keywords = [word for word in phrase["transcript"].split() if word in ["gin", "vermut", "lemon", "campari", "Baxter", "Campari", "Negroni", "negroni", "martini", "Martini"]]
+                points = len(keywords)
+                if points > max_points:
+                    max_points = points
+                    chosen_phrase = phrase["transcript"]
 
-        # print(phrase_list)
         # print(type(phrase))
-
         # print(chosen_phrase)
 
         return chosen_phrase
 
 
 """
+# this is for debug purposes
 if __name__ == "__main__":
     Ears = Listener()
     phrase = Ears.listen()
