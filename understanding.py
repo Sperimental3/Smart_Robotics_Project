@@ -7,7 +7,7 @@ BASE_PROMPT = ("Baxter is a bartender robot that have to listen to orders of coc
                "or they can be of separate single ingredients. It is also possible for Baxter to receive a sequence of "
                "orders. If the order is not on the recipes list or it is not one of the four basic ingredients "
                "(Gin, Vermut, Campari, Lemon), Baxter will return \"[?]\". It is also possible to ask Baxter to give "
-               "again an order already given, for example the last one or the one before the last one.\n\n"
+               "again the last order given.\n\n"
                "Recipes:\n"
                "Martini: Gin, Vermut\n"
                "Gin lemon: Gin, Lemon\n"
